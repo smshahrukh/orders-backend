@@ -5,10 +5,9 @@ var indexRouter = require('./routes/index');
 const db = require('./models/index.model')
 
 // db.sequelize.sync();
-db.sequelize.sync({ force: false })
+db.sequelize.sync({ force: true })
   .then(function() {
     console.log(`Database & tables created! `);
-    console.log("orderItemss sc: ")
     db.OrderItem.bulkCreate([
         { id: 1, name: "Water Bottle 1 Liter", price: 10},
         { id: 2, name: "Pepsi 200ML", price: 20},

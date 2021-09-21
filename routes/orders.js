@@ -11,7 +11,6 @@ router.get('/', async function (req, res, next) {
     const statuses = await db.Status.findAll()
 
     const orders = _orders.map(order => {
-      console.log({ order })
       const status = statuses.find(s => s.value == order.status);
       return {
         ...order,
@@ -50,16 +49,20 @@ router.post('/create', async function (req, res) {
     })
   }
 
-  const order_items = await db.orderItemsBridge.bulkCreate(order_items_array, {
+  await db.orderItemsBridge.bulkCreate(order_items_array, {
     returning: true
   })
 
-  console.log({ order_items })
-
+  const statuses = await db.Status.findAll()
+  const status = statuses.find(s => s.value == order.status);
   try {
 
     res.status(200).json({
-      data: req.body
+      data: {
+        id: order.id,
+        customerName: order.customerName,
+        status: status.label
+      }
     })
 
   }
@@ -68,6 +71,34 @@ router.post('/create', async function (req, res) {
       msg: "Something went wrong"
     })
   }
+})
+
+router.get("/:id", async function (req, res) {
+  const { params } = req;
+  const { id } = params;
+
+  try {
+    const order = await db.Order.findOne({
+      where: { id: Number(id),
+        include: {
+            model: db.OrderItem,
+            through: {
+              model: db.orderItemsBridge,
+              attributes: [],
+            }
+        }
+      },
+  
+    });
+  
+    res.status(200).json(order)
+  }
+  catch(e) {
+    console.log({ e })
+    res.status(404).json({ msg: "Order not found"})
+  }
+
+  
 })
 
 module.exports = router;
