@@ -43,8 +43,8 @@ router.post('/create', async function (req, res) {
   const order_items_array = [];
   for (let i = 0; i < items.length; i++) {
     order_items_array.push({
-      order_id: order.id,
-      order_item_id: Number(items[i].name),
+      OrderId: order.id,
+      OrderItemId: Number(items[i].name),
       quantity: items[i].quantity,
     })
   }
@@ -79,16 +79,14 @@ router.get("/:id", async function (req, res) {
 
   try {
     const order = await db.Order.findOne({
-      where: { id: Number(id),
-        include: {
+      where: { id: Number(id)},
+        include: [{
             model: db.OrderItem,
             through: {
               model: db.orderItemsBridge,
               attributes: [],
             }
-        }
-      },
-  
+        }]  
     });
   
     res.status(200).json(order)

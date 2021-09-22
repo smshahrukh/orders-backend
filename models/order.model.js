@@ -30,13 +30,11 @@ const OrderItem = sequelize.define('OrderItem', {
 });
 
 const orderItemsBridge = sequelize.define("order_items_bridge", {
-  order_id: {
+  OrderId: {
       type: INTEGER,
-      primaryKey: true,
   },
-  order_item_id: {
+  OrderItemId: {
       type: INTEGER,
-      primaryKey: true,
   },
   quantity: {
       type: INTEGER,
