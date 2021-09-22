@@ -86,10 +86,18 @@ router.get("/:id", async function (req, res) {
               model: db.orderItemsBridge,
               attributes: [],
             }
-        }]  
+        }],
     });
+
+    const statuses = await db.Status.findAll()
+    const status = statuses.find(s => s.value == order.status);
+
+    const obj = JSON.parse(JSON.stringify(order))
   
-    res.status(200).json(order)
+    res.status(200).json({
+      ...obj,
+      status: status?.label
+    })
   }
   catch(e) {
     console.log({ e })
