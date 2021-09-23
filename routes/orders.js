@@ -37,14 +37,15 @@ router.post('/create', async function (req, res) {
 
   const order = await db.Order.create({
     customerName,
-    phoneNum
+    phoneNum,
+    status: 0
   })
 
   const order_items_array = [];
   for (let i = 0; i < items.length; i++) {
     order_items_array.push({
-      OrderId: order.id,
-      OrderItemId: Number(items[i].name),
+      orderId: order.id,
+      orderItemId: Number(items[i].name),
       quantity: items[i].quantity,
     })
   }
@@ -67,6 +68,7 @@ router.post('/create', async function (req, res) {
 
   }
   catch (e) {
+    console.log("e: ", e)
     res.status(404).json({
       msg: "Something went wrong"
     })
@@ -80,7 +82,8 @@ router.get("/:id", async function (req, res) {
   try {
     const order = await db.Order.findOne({
       where: { id: Number(id)},
-        include: [{
+        include: [
+          {
             model: db.OrderItem,
             through: {
               model: db.orderItemsBridge,

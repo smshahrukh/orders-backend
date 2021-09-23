@@ -2,7 +2,7 @@ const OrderSchema = (sequelize, Sequelize) => {
   const { DataTypes } = Sequelize
   const { STRING, INTEGER } = DataTypes
 
-const Order = sequelize.define('Order', { 
+const Order = sequelize.define('order', { 
   customerName: {
     type: STRING,
     allowNull: false
@@ -10,7 +10,7 @@ const Order = sequelize.define('Order', {
   phoneNum: {
     type: STRING,
     allowNull: true
-  },
+  }, 
   status: {
       type: INTEGER,
       allowNull: false,
@@ -18,7 +18,7 @@ const Order = sequelize.define('Order', {
   }
 });
 
-const OrderItem = sequelize.define('OrderItem', { 
+const OrderItem = sequelize.define('orderItem', { 
   name: {
     type: DataTypes.STRING,
     allowNull: false
@@ -30,10 +30,10 @@ const OrderItem = sequelize.define('OrderItem', {
 });
 
 const orderItemsBridge = sequelize.define("order_items_bridge", {
-  OrderId: {
+  orderId: {
       type: INTEGER,
   },
-  OrderItemId: {
+  orderItemId: {
       type: INTEGER,
   },
   quantity: {
@@ -41,9 +41,21 @@ const orderItemsBridge = sequelize.define("order_items_bridge", {
   }
 });
 
-Order.belongsToMany(OrderItem, { through: 'order_items_bridge' });
+const Status = sequelize.define('Status', {
+  label: {
+    type: STRING,
+    allowNull: false
+  },
+  value: {
+    type: INTEGER,
+    allowNull: false
+  }
+});
 
-return { Order, OrderItem, orderItemsBridge }
+// Order.hasOne(Status)
+Order.belongsToMany(OrderItem, { through: 'order_items_bridge', constraints: false });
+
+return { Order, OrderItem, orderItemsBridge, Status }
 
 }
  

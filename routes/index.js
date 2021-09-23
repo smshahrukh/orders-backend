@@ -3,7 +3,7 @@ var router = express.Router();
 
 var ordersRouter = require('./orders');
 var orderItemsRouter = require('./orderItems');
-
+var authRouter = require('./auth');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.use('/orders', ordersRouter);
-
 router.use('/orderItems', orderItemsRouter);
+router.use('/auth', authRouter);
 
 module.exports = router;
